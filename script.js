@@ -19,7 +19,9 @@ let charts = {
     costComparison: null,
     contextWindow: null,
     providerDistribution: null,
-    costEfficiency: null
+    costEfficiency: null,
+    expensiveModels: null,
+    cheapestModels: null
 };
 
 // Initialize charts when the page loads
@@ -33,6 +35,8 @@ function createAllCharts(data) {
     createContextWindowChart(data);
     createProviderDistributionChart(data);
     createCostEfficiencyChart(data);
+    createExpensiveModelsChart(data);
+    createCheapestModelsChart(data);
 }
 
 function createCostComparisonChart(data) {
@@ -173,6 +177,124 @@ function createCostEfficiencyChart(data) {
             scales: {
                 y: {
                     beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+function createExpensiveModelsChart(data) {
+    // Calculate total cost (input + output) for each model
+    const modelCosts = data.map(model => ({
+        name: model.name,
+        totalCost: model.inputCost + model.outputCost,
+        inputCost: model.inputCost,
+        outputCost: model.outputCost
+    }));
+
+    // Sort by total cost and get top 5
+    const top5Expensive = modelCosts
+        .sort((a, b) => b.totalCost - a.totalCost)
+        .slice(0, 5);
+
+    const ctx = document.getElementById('expensiveModelsChart').getContext('2d');
+    
+    // Destroy existing chart if it exists
+    if (charts.expensiveModels) {
+        charts.expensiveModels.destroy();
+    }
+    
+    charts.expensiveModels = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: top5Expensive.map(model => model.name),
+            datasets: [
+                {
+                    label: 'Input Cost ($/1M tokens)',
+                    data: top5Expensive.map(model => model.inputCost),
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                },
+                {
+                    label: 'Output Cost ($/1M tokens)',
+                    data: top5Expensive.map(model => model.outputCost),
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    type: 'logarithmic'
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Top 5 Most Expensive Models (Total Cost)'
+                }
+            }
+        }
+    });
+}
+
+function createCheapestModelsChart(data) {
+    // Calculate total cost (input + output) for each model
+    const modelCosts = data.map(model => ({
+        name: model.name,
+        totalCost: model.inputCost + model.outputCost,
+        inputCost: model.inputCost,
+        outputCost: model.outputCost
+    }));
+
+    // Sort by total cost and get bottom 5
+    const top5Cheapest = modelCosts
+        .sort((a, b) => a.totalCost - b.totalCost)
+        .slice(0, 5);
+
+    const ctx = document.getElementById('cheapestModelsChart').getContext('2d');
+    
+    // Destroy existing chart if it exists
+    if (charts.cheapestModels) {
+        charts.cheapestModels.destroy();
+    }
+    
+    charts.cheapestModels = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: top5Cheapest.map(model => model.name),
+            datasets: [
+                {
+                    label: 'Input Cost ($/1M tokens)',
+                    data: top5Cheapest.map(model => model.inputCost),
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                },
+                {
+                    label: 'Output Cost ($/1M tokens)',
+                    data: top5Cheapest.map(model => model.outputCost),
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    type: 'linear'  // Using linear scale for better visibility of small values
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Top 5 Most Affordable Models (Total Cost)'
                 }
             }
         }
