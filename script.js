@@ -23,21 +23,21 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeFilters();
 });
 
-function createCostComparisonChart() {
+function createCostComparisonChart(data = modelData) {
     const ctx = document.getElementById('costComparisonChart').getContext('2d');
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: modelData.map(model => model.name),
+            labels: data.map(model => model.name),
             datasets: [
                 {
                     label: 'Input Cost ($/1M tokens)',
-                    data: modelData.map(model => model.inputCost),
+                    data: data.map(model => model.inputCost),
                     backgroundColor: 'rgba(54, 162, 235, 0.7)',
                 },
                 {
                     label: 'Output Cost ($/1M tokens)',
-                    data: modelData.map(model => model.outputCost),
+                    data: data.map(model => model.outputCost),
                     backgroundColor: 'rgba(255, 99, 132, 0.7)',
                 }
             ]
@@ -59,15 +59,15 @@ function createCostComparisonChart() {
     });
 }
 
-function createContextWindowChart() {
+function createContextWindowChart(data = modelData) {
     const ctx = document.getElementById('contextWindowChart').getContext('2d');
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: modelData.map(model => model.name),
+            labels: data.map(model => model.name),
             datasets: [{
                 label: 'Context Window Size (tokens)',
-                data: modelData.map(model => model.context),
+                data: data.map(model => model.context),
                 backgroundColor: 'rgba(75, 192, 192, 0.7)'
             }]
         },
@@ -82,9 +82,9 @@ function createContextWindowChart() {
     });
 }
 
-function createProviderDistributionChart() {
+function createProviderDistributionChart(data = modelData) {
     const providerCounts = {};
-    modelData.forEach(model => {
+    data.forEach(model => {
         providerCounts[model.provider] = (providerCounts[model.provider] || 0) + 1;
     });
 
@@ -115,8 +115,8 @@ function createProviderDistributionChart() {
     });
 }
 
-function createCostEfficiencyChart() {
-    const costEfficiency = modelData.map(model => ({
+function createCostEfficiencyChart(data = modelData) {
+    const costEfficiency = data.map(model => ({
         name: model.name,
         ratio: model.outputCost / model.inputCost
     }));
@@ -163,7 +163,7 @@ function updateCharts() {
     const selectedProvider = document.getElementById('providerFilter').value;
     const selectedCostRange = document.getElementById('costRangeFilter').value;
 
-    let filteredData = modelData;
+    let filteredData = [...modelData];  // Create a copy of the original data
 
     // Filter by provider
     if (selectedProvider !== 'all') {
@@ -187,21 +187,16 @@ function updateCharts() {
         });
     }
 
-    // Update all charts with filtered data
-    updateAllCharts(filteredData);
-}
-
-function updateAllCharts(filteredData) {
-    // Remove existing charts
-    document.querySelectorAll('canvas').forEach(canvas => {
-        canvas.remove();
-    });
-
-    // Create new canvas elements
-    document.querySelectorAll('.chart-container').forEach(container => {
-        const canvas = document.createElement('canvas');
-        canvas.id = container.querySelector('h2').textContent.toLowerCase().replace(/\s+/g, '') + 'Chart';
-        container.appendChild(canvas);
+    // Clear existing charts
+    const containers = document.querySelectorAll('.chart-container');
+    containers.forEach(container => {
+        const canvas = container.querySelector('canvas');
+        if (canvas) {
+            canvas.remove();
+        }
+        const newCanvas = document.createElement('canvas');
+        newCanvas.id = container.querySelector('h2').textContent.toLowerCase().replace(/[\s()\/]+/g, '') + 'Chart';
+        container.appendChild(newCanvas);
     });
 
     // Recreate charts with filtered data
