@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Model Pricing Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Model Pricing Dashboard</h1>
+        </header>
+        
+        <div class="dashboard-grid">
+            <div class="chart-container">
+                <h2>Input vs Output Costs</h2>
+                <canvas id="costComparisonChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h2>Context Window Sizes</h2>
+                <canvas id="contextWindowChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h2>Provider Distribution</h2>
+                <canvas id="providerDistributionChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h2>Cost Efficiency (Output/Input Ratio)</h2>
+                <canvas id="costEfficiencyChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="filters">
+            <h3>Filters</h3>
+            <select id="providerFilter">
+                <option value="all">All Providers</option>
+            </select>
+            <select id="costRangeFilter">
+                <option value="all">All Cost Ranges</option>
+                <option value="low">Low Cost (< $1/1M tokens)</option>
+                <option value="medium">Medium Cost ($1-10/1M tokens)</option>
+                <option value="high">High Cost (> $10/1M tokens)</option>
+            </select>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
