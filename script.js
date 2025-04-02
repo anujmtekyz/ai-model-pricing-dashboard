@@ -14,18 +14,36 @@ const modelData = [
     { name: 'Google: Gemini Pro 1.5', provider: 'Google', inputCost: 1.25, outputCost: 5, context: 2000000 }
 ];
 
+// Store chart instances
+let charts = {
+    costComparison: null,
+    contextWindow: null,
+    providerDistribution: null,
+    costEfficiency: null
+};
+
 // Initialize charts when the page loads
 document.addEventListener('DOMContentLoaded', function() {
-    createCostComparisonChart();
-    createContextWindowChart();
-    createProviderDistributionChart();
-    createCostEfficiencyChart();
+    createAllCharts(modelData);
     initializeFilters();
 });
 
-function createCostComparisonChart(data = modelData) {
+function createAllCharts(data) {
+    createCostComparisonChart(data);
+    createContextWindowChart(data);
+    createProviderDistributionChart(data);
+    createCostEfficiencyChart(data);
+}
+
+function createCostComparisonChart(data) {
     const ctx = document.getElementById('costComparisonChart').getContext('2d');
-    new Chart(ctx, {
+    
+    // Destroy existing chart if it exists
+    if (charts.costComparison) {
+        charts.costComparison.destroy();
+    }
+    
+    charts.costComparison = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: data.map(model => model.name),
@@ -59,9 +77,15 @@ function createCostComparisonChart(data = modelData) {
     });
 }
 
-function createContextWindowChart(data = modelData) {
+function createContextWindowChart(data) {
     const ctx = document.getElementById('contextWindowChart').getContext('2d');
-    new Chart(ctx, {
+    
+    // Destroy existing chart if it exists
+    if (charts.contextWindow) {
+        charts.contextWindow.destroy();
+    }
+    
+    charts.contextWindow = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: data.map(model => model.name),
@@ -82,14 +106,20 @@ function createContextWindowChart(data = modelData) {
     });
 }
 
-function createProviderDistributionChart(data = modelData) {
+function createProviderDistributionChart(data) {
     const providerCounts = {};
     data.forEach(model => {
         providerCounts[model.provider] = (providerCounts[model.provider] || 0) + 1;
     });
 
     const ctx = document.getElementById('providerDistributionChart').getContext('2d');
-    new Chart(ctx, {
+    
+    // Destroy existing chart if it exists
+    if (charts.providerDistribution) {
+        charts.providerDistribution.destroy();
+    }
+    
+    charts.providerDistribution = new Chart(ctx, {
         type: 'pie',
         data: {
             labels: Object.keys(providerCounts),
@@ -115,14 +145,20 @@ function createProviderDistributionChart(data = modelData) {
     });
 }
 
-function createCostEfficiencyChart(data = modelData) {
+function createCostEfficiencyChart(data) {
     const costEfficiency = data.map(model => ({
         name: model.name,
         ratio: model.outputCost / model.inputCost
     }));
 
     const ctx = document.getElementById('costEfficiencyChart').getContext('2d');
-    new Chart(ctx, {
+    
+    // Destroy existing chart if it exists
+    if (charts.costEfficiency) {
+        charts.costEfficiency.destroy();
+    }
+    
+    charts.costEfficiency = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: costEfficiency.map(item => item.name),
@@ -187,21 +223,6 @@ function updateCharts() {
         });
     }
 
-    // Clear existing charts
-    const containers = document.querySelectorAll('.chart-container');
-    containers.forEach(container => {
-        const canvas = container.querySelector('canvas');
-        if (canvas) {
-            canvas.remove();
-        }
-        const newCanvas = document.createElement('canvas');
-        newCanvas.id = container.querySelector('h2').textContent.toLowerCase().replace(/[\s()\/]+/g, '') + 'Chart';
-        container.appendChild(newCanvas);
-    });
-
-    // Recreate charts with filtered data
-    createCostComparisonChart(filteredData);
-    createContextWindowChart(filteredData);
-    createProviderDistributionChart(filteredData);
-    createCostEfficiencyChart(filteredData);
+    // Update all charts with filtered data
+    createAllCharts(filteredData);
 } 
