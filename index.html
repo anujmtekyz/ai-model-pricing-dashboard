@@ -13,6 +13,19 @@
             <h1>AI Model Pricing Dashboard</h1>
         </header>
         
+        <div class="filters">
+            <h3>Filters</h3>
+            <select id="providerFilter">
+                <option value="all">All Providers</option>
+            </select>
+            <select id="costRangeFilter">
+                <option value="all">All Cost Ranges</option>
+                <option value="low">Low Cost (< $1/1M tokens)</option>
+                <option value="medium">Medium Cost ($1-10/1M tokens)</option>
+                <option value="high">High Cost (> $10/1M tokens)</option>
+            </select>
+        </div>
+        
         <div class="dashboard-grid">
             <div class="chart-container">
                 <h2>Input vs Output Costs</h2>
@@ -43,19 +56,6 @@
                 <h2>Top 5 Most Affordable Models</h2>
                 <canvas id="cheapestModelsChart"></canvas>
             </div>
-        </div>
-        
-        <div class="filters">
-            <h3>Filters</h3>
-            <select id="providerFilter">
-                <option value="all">All Providers</option>
-            </select>
-            <select id="costRangeFilter">
-                <option value="all">All Cost Ranges</option>
-                <option value="low">Low Cost (< $1/1M tokens)</option>
-                <option value="medium">Medium Cost ($1-10/1M tokens)</option>
-                <option value="high">High Cost (> $10/1M tokens)</option>
-            </select>
         </div>
     </div>
     <script src="script.js"></script>
