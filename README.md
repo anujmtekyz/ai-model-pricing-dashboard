@@ -2,6 +2,10 @@
 
 An interactive dashboard visualizing pricing and specifications for various AI models across different providers.
 
+## Live Demo
+
+Visit the live dashboard at: https://anujmtekyz.github.io/ai-model-pricing-dashboard/
+
 ## Features
 
 - Interactive visualizations of AI model pricing data
@@ -20,7 +24,11 @@ An interactive dashboard visualizing pricing and specifications for various AI m
 
 ## Usage
 
-Simply open `index.html` in a web browser to view the dashboard. Use the filters at the bottom to customize the view based on providers and cost ranges.
+You can access the dashboard in two ways:
+1. Visit the live demo at https://anujmtekyz.github.io/ai-model-pricing-dashboard/
+2. Clone the repository and open `index.html` in a web browser
+
+Use the filters at the bottom to customize the view based on providers and cost ranges.
 
 ## Technologies Used
 
@@ -38,6 +46,15 @@ The dashboard includes pricing data for various AI models from providers includi
 - Amazon
 - MiniMax
 - Mistral
+
+## Development
+
+To run this project locally:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/anujmtekyz/ai-model-pricing-dashboard.git
+   ```
+2. Open `index.html` in your browser
 
 ## Contributing
 
